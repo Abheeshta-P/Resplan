@@ -1,0 +1,32 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 128 128"
+>
+  <!-- P / R structure -->
+  <path
+    d="M34 104V24H66
+       C84 24 94 33 94 49
+       C94 64 84 73 66 73H34"
+    stroke="#ffffff"
+    stroke-width="11"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Green R / check -->
+  <path
+    d="M50 78L80 100"
+    stroke="#10B981"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M135 42L80 100"
+    stroke="#10B981"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
