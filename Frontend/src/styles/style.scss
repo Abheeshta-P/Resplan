@@ -1,0 +1,49 @@
+@use "./button.scss";
+
+* {
+    margin: 0%;
+    padding: 0%;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Backgrounds */
+    --bg: #161616;
+    --bg-secondary: #1e1e1e;
+    --bg-tertiary: #252525;
+
+    /* Text */
+    --text: #f5f5f5;
+    --text-secondary: #b3b3b3;
+    --text-muted: #808080;
+
+    /* Primary — buttons, CTAs, active states */
+    --primary: #05a36e;
+    --primary-hover: #04b378;
+    --primary-active: #038f61;
+
+    /* Primary text — links, clickable text */
+    --primary-text: #20c997;
+    --primary-text-hover: #3dd9a5;
+
+    /* Primary subtle — selected backgrounds, badges */
+    --primary-light: #12382d;
+    --primary-border: #1d6b51;
+
+    /* Content placed ON primary */
+    --primary-foreground: #ffffff;
+
+    /* Borders */
+    --border: #333333;
+    --border-hover: #444444;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
