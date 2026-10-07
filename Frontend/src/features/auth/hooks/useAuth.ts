@@ -1,14 +1,29 @@
 import { toast } from "react-hot-toast";
 import axios from "axios";
 
-import { login, logout, register } from "../services/auth.api";
+import { getMe, login, logout, register } from "../services/auth.api";
 import { useAuthContext } from "../auth.context";
-import type { AuthResponse } from "../types/type";
+import { useEffect } from "react";
 
 // on success and on error toast can be added here
 
 export const useAuth = () => {
     const { user, setUser, loading, setLoading } = useAuthContext();
+
+    useEffect(() => {
+        const getAndSetUser = async () => {
+            try {
+                const data: AuthResponse = await getMe();
+                setUser(data.user);
+            } catch (error) {
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getAndSetUser();
+    }, []);
 
     const handleRegister = async ({
         username,

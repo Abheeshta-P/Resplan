@@ -2,9 +2,11 @@ import "../styles/loadingscreen.scss"
 
 const LoadingScreen = () => { 
     return (
-        <div className="loading-screen"> 
-            <div className="loader" /> 
-        </div>
+        <main>
+            <div className="loading-screen"> 
+                <div className="loader" /> 
+            </div>
+        </main>
     ); 
 }; 
 
