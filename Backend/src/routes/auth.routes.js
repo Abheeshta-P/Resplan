@@ -28,7 +28,7 @@ authRouter.get("/logout", authController.logoutUserController)
 /**
  * @route GET /api/auth/get-me
  * @description get the current logged in user details
- * @access Private
+ * @access Protected
  */
 authRouter.get("/get-me", authMiddleware.authUser, authController.getMeController)
 
