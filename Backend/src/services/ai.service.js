@@ -1,6 +1,5 @@
 const {GoogleGenAI} = require("@google/genai");
 const {z} = require("zod")
-const {zodToJsonSchema} = require("zod-to-json-schema")
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
@@ -30,22 +29,82 @@ const interviewReportSchema = z.object({
     title: z.string().describe("The title of the job for which the interview report is generated"),
 });
 
-async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-    const prompt = `Generate an interview report for a candidate with the following details:
-                    Resume: ${resume}
-                    Self Description: ${selfDescription}
-                    Job Description: ${jobDescription}`
+const jsonSchema = z.toJSONSchema(interviewReportSchema);
 
-    const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash-lite",
-        contents: prompt,
-       config: {
-            responseMimeType: "application/json",
-            responseJsonSchema: zodToJsonSchema(interviewReportSchema),
+async function generateInterviewReport({
+    resume,
+    selfDescription,
+    jobDescription
+}) {
+    try {
+        const prompt = `
+Generate an interview preparation report for the candidate.
+
+Resume:
+${resume}
+
+Self-description:
+${selfDescription}
+
+Job description:
+${jobDescription}
+
+Return ONLY a valid JSON object matching the requested schema.
+Do not include candidateName, strengths, recommendation,
+interviewSummary, or hiringManagerNotes.
+
+Requirements:
+- matchScore must be between 0 and 100.
+- Generate 5 technical questions with intentions and suggested answers.
+- Generate 5 behavioral questions with intentions and suggested answers.
+- Identify skill gaps with low, medium, or high severity.
+- Create a practical 7-day preparation plan.
+- Every plan entry must include day, focus, and tasks.
+- title must contain the job title.
+`;
+
+        const response = await ai.models.generateContent({
+            model: "gemini-3.5-flash-lite",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseJsonSchema: jsonSchema
+            }
+        });
+
+        if (!response.text) {
+            throw new Error("Gemini returned an empty response");
         }
-    })
 
-    console.log(JSON.parse(response.text))
+        const parsedResponse = JSON.parse(response.text);
+
+        // Validate the generated report against the Zod schema
+        const report = interviewReportSchema.parse(parsedResponse);
+
+        console.log(JSON.stringify(report, null, 2));
+
+        return report;
+
+    } catch (error) {
+        if (error.status === 429) {
+            console.error("Gemini API quota exceeded.");
+
+            return {
+                success: false,
+                message: "AI request quota exceeded. Please try again later."
+            };
+        }
+
+        if (error instanceof SyntaxError) {
+            console.error("Gemini returned invalid JSON:", error.message);
+        } else if (error instanceof z.ZodError) {
+            console.error("Report validation failed:", error.issues);
+        } else {
+            console.error("Interview report generation failed:", error.message);
+        }
+
+        throw error;
+    }
 }
 
 module.exports = generateInterviewReport
