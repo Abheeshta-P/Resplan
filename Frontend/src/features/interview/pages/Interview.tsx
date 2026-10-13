@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import '../style/interview.scss'
 import { useInterview } from '../hooks/useInterview.ts'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate } from 'react-router'
+import LoadingScreen from '../../../components/LoadingScreen.tsx'
 
 const NAV_ITEMS = [
     { id: 'technical', label: 'Technical Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
@@ -56,24 +57,43 @@ const RoadMapDay = ({ day }: { day: PreparationDay }) => (
 
 // ── Main Component 
 const Interview = () => {
-    const [activeNav, setActiveNav] = useState('technical')
-    const { report, getReportById, loading, getResumePdf } = useInterview()
-    const { interviewId } = useParams()
+    const [activeNav, setActiveNav] = useState('technical');
+    const { report, loading } = useInterview();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        getReportById(interviewId ?? "");
-    }, [interviewId]);
+    const [expandedInput, setExpandedInput] = useState<string | null>(null);
+
+    const toggleInput = (input: string) => {
+        setExpandedInput((current) => current === input ? null : input);
+    };
 
     if (loading) {
         return (
-            <main className="loading-screen">
-                <h1>Loading your interview plan...</h1>
-            </main>
+            <LoadingScreen text="Loading interview report..." />
         );
     }
 
+    console.log(report);
+
     if (!report) {
-        return <main>Interview report not found.</main>;
+        return (
+            <main className="interview-page interview-empty">
+                <div className="interview-empty__card">
+                    <h2>Interview report not found</h2>
+                    <p>
+                        This report may have been deleted or the link may be invalid.
+                        Please check the URL or return to your reports.
+                    </p>
+
+                    <button
+                        className="interview-empty__button"
+                        onClick={() => navigate("/")}
+                    >
+                        Back to Home Page
+                    </button>
+                </div>
+            </main>
+        );
     }
 
     const scoreColor =
@@ -183,6 +203,56 @@ const Interview = () => {
                         </div>
                     </div>
 
+                    <div className="sidebar-divider" />
+
+                    <div className="report-inputs">
+                        <p className="report-inputs__label">Original Inputs</p>
+
+                        {[
+                            { id: 'jobDescription', label: 'Job Description', content: report.jobDescription },
+                            ...(report.resume
+                                ? [{ id: 'resume', label: 'Parsed Resume', content: report.resume }]
+                                : []),
+                            ...(report.selfDescription
+                                ? [{ id: 'selfDescription', label: 'Self-description', content: report.selfDescription }]
+                                : []),
+                        ].map((item) => (
+                            <div className="report-inputs__item" key={item.id}>
+                                <button
+                                    type="button"
+                                    className="report-inputs__trigger"
+                                    onClick={() => toggleInput(item.id)}
+                                    aria-expanded={expandedInput === item.id}
+                                >
+                                    <span>{item.label}</span>
+                                    <span className={`report-inputs__chevron ${expandedInput === item.id ? 'report-inputs__chevron--open' : ''
+                                        }`}>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <polyline points="6 9 12 15 18 9" />
+                                        </svg>
+                                    </span>
+                                </button>
+
+                                {expandedInput === item.id && (
+                                    <div
+                                        className="report-inputs__content"
+                                    >
+                                        {item.content}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </aside>
             </div>
         </div>

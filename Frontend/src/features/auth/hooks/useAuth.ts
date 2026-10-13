@@ -10,21 +10,6 @@ import { useEffect } from "react";
 export const useAuth = () => {
     const { user, setUser, loading, setLoading } = useAuthContext();
 
-    useEffect(() => {
-        const getAndSetUser = async () => {
-            try {
-                const data: AuthResponse = await getMe();
-                setUser(data.user);
-            } catch (error) {
-                setUser(null);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getAndSetUser();
-    }, []);
-
     const handleRegister = async ({
         username,
         email,
@@ -111,6 +96,21 @@ export const useAuth = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const getAndSetUser = async () => {
+            try {
+                const data: AuthResponse = await getMe();
+                setUser(data.user);
+            } catch (error) {
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getAndSetUser();
+    }, []);
 
     return {
         user,

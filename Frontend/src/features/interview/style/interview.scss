@@ -9,9 +9,9 @@ $text-muted: #808080;
 $accent: #05a36e;
 
 // Severity palette
-$severity-high: #c75b5b;   // Muted red — critical / urgent
+$severity-high: #c75b5b; // Muted red — critical / urgent
 $severity-medium: #b58a3a; // Muted amber — warning
-$severity-low: #4f9668;    // Muted green — low severity
+$severity-low: #4f9668; // Muted green — low severity
 
 *::-webkit-scrollbar {
     display: none;
@@ -116,6 +116,76 @@ $severity-low: #4f9668;    // Muted green — low severity
 
     section {
         min-height: 100%;
+    }
+}
+
+.interview-empty {
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+
+    &__card {
+        width: 100%;
+        max-width: 440px;
+        padding: 2.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background-color: $bg-card;
+        border: 1px solid $border-color;
+        border-radius: 1rem;
+        box-sizing: border-box;
+    }
+
+    h2 {
+        margin: 0 0 0.75rem;
+        color: $text-primary;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    p {
+        max-width: 330px;
+        margin: 0 0 1.75rem;
+        color: $text-muted;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    &__button {
+        padding: 0.75rem 1.25rem;
+        border: none;
+        border-radius: 999px;
+        background-color: $accent;
+        color: #fff;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s;
+
+        &:hover {
+            background-color: darken($accent, 6%);
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        &:focus-visible {
+            outline: 2px solid $accent;
+            outline-offset: 3px;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .interview-empty {
+        padding: 1rem;
+
+        &__card {
+            padding: 2rem 1.25rem;
+        }
     }
 }
 
@@ -408,6 +478,9 @@ $severity-low: #4f9668;    // Muted green — low severity
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 
     &__label {
         font-size: 0.75rem;
@@ -422,10 +495,20 @@ $severity-low: #4f9668;    // Muted green — low severity
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
     }
 }
 
 .skill-tag {
+    display: inline-flex;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+
     font-size: 0.775rem;
     font-weight: 500;
     padding: 0.3rem 0.7rem;
@@ -446,5 +529,106 @@ $severity-low: #4f9668;    // Muted green — low severity
     &--low {
         color: $severity-low;
         background-color: rgba($severity-low, 0.1);
+    }
+}
+
+.report-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    width: 100%;
+    min-width: 0;
+
+    &__label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: $text-muted;
+        margin: 0 0 0.25rem;
+    }
+
+    &__item {
+        min-width: 0;
+        border: 1px solid $border-color;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background-color: $bg-panel;
+    }
+
+    &__trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.7rem 0.75rem;
+        border: none;
+        background: transparent;
+        color: $text-primary;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align: left;
+        cursor: pointer;
+        transition: background-color 0.15s;
+
+        &:hover {
+            background-color: $bg-card;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $accent;
+            outline-offset: -2px;
+        }
+    }
+
+    &__chevron {
+        display: flex;
+        flex-shrink: 0;
+        color: $text-muted;
+        transition: transform 0.2s;
+
+        &--open {
+            transform: rotate(180deg);
+            color: $accent;
+        }
+    }
+
+    &__content {
+        width: 100%;
+        max-height: 180px;
+        min-width: 0;
+        box-sizing: border-box;
+
+        padding: 0.75rem;
+        border-top: 1px solid $border-color;
+
+        color: $text-muted;
+        font-size: 0.775rem;
+        line-height: 1.6;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+
+        // Subtle scrollbar
+        scrollbar-width: thin;
+        scrollbar-color: $border-color transparent;
+
+        &::-webkit-scrollbar {
+            display: block;
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: $border-color;
+            border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
     }
 }

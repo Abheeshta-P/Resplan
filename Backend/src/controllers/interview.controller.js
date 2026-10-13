@@ -36,7 +36,7 @@ async function generateInterViewReportController(req, res) {
 
     res.status(201).json({
         message: "Interview report generated successfully.",
-        data: interviewReport
+        interviewReport
     })
 }
 
@@ -61,7 +61,7 @@ async function getInterViewReportByIdController(req, res) {
 
     res.status(200).json({
         message: "Interview report retrived successfully.",
-        data: interviewReport
+        interviewReport
     })
 }
 
@@ -79,7 +79,7 @@ async function getAllInterViewReportsController(req, res) {
 
     res.status(200).json({
         message: "Interview reports retrived successfully.",
-        data: interviewReports
+        interviewReports
     })
 }
 

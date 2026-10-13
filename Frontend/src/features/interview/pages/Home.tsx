@@ -1,30 +1,36 @@
 import { useState, useRef } from 'react'
 import "../style/home.scss"
-// import { useInterview } from '../hooks/useInterview.js'
+import { useInterview } from '../hooks/useInterview.ts'
 import { useNavigate } from 'react-router'
+import LoadingScreen from '../../../components/LoadingScreen.tsx'
 
 const Home = () => {
 
-    // const { loading, generateReport,reports } = useInterview()
-    const [ jobDescription, setJobDescription ] = useState("")
-    const [ selfDescription, setSelfDescription ] = useState("")
-    const resumeInputRef = useRef(null)
-
-    const navigate = useNavigate()
+    const { loading, handleGenerateInterviewReport, reports } = useInterview()
+    const [jobDescription, setJobDescription] = useState<string>("")
+    const [selfDescription, setSelfDescription] = useState<string>("")
+    const resumeInputRef = useRef<HTMLInputElement>(null);
+    const navigate = useNavigate();
 
     const handleGenerateReport = async () => {
-        // const resumeFile = resumeInputRef.current.files[ 0 ]
-        // const data = await generateReport({ jobDescription, selfDescription, resumeFile })
-        // navigate(`/interview/${data._id}`)
-    }
+        const resume = resumeInputRef.current?.files?.[0];
 
-    // if (loading) {
-    //     return (
-    //         <main className='loading-screen'>
-    //             <h1>Loading your interview plan...</h1>
-    //         </main>
-    //     )
-    // }
+        const data = await handleGenerateInterviewReport({
+            jobDescription,
+            resume,
+            selfDescription,
+        });
+
+        if (data?._id) {
+            navigate(`/interview/${data._id}`);
+        }
+    };
+
+    if (loading) {
+        return (
+            <LoadingScreen text="Generating interview report..." />
+        )
+    }
 
     return (
         <div className='home-page'>
@@ -113,7 +119,7 @@ const Home = () => {
             </div>
 
             {/* Recent Reports List */}
-            {/* {reports.length > 0 && (
+            {reports && reports.length > 0 && (
                 <section className='recent-reports'>
                     <h2>My Recent Interview Plans</h2>
                     <ul className='reports-list'>
@@ -126,7 +132,7 @@ const Home = () => {
                         ))}
                     </ul>
                 </section>
-            )} */}
+            )}
 
             {/* Page Footer */}
             <footer className='page-footer'>

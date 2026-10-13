@@ -1,13 +1,18 @@
-import "../styles/loadingscreen.scss"
+import "../styles/loadingscreen.scss";
 
-const LoadingScreen = () => { 
+interface LoadingScreenProps {
+    text?: string;
+}
+
+const LoadingScreen = ({ text }: LoadingScreenProps) => {
     return (
         <main>
-            <div className="loading-screen"> 
-                <div className="loader" /> 
+            <div className="loading-screen">
+                <div className="loader" />
+                {text && <p>{text}</p>}
             </div>
         </main>
-    ); 
-}; 
+    );
+};
 
 export default LoadingScreen;

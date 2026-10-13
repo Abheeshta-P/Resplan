@@ -43,6 +43,6 @@ type InterviewReport = {
     preparationPlan: PreparationDay[];
     user: string;
     title: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 };

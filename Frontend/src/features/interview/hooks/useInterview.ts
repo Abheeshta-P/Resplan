@@ -2,9 +2,13 @@ import toast from "react-hot-toast";
 import { useInterviewContext } from "../interview.context"
 import { generateInterviewReport, getAllInterviewReports, getInterviewReportById } from "../services/interview.api";
 import axios from "axios";
+import { useParams } from "react-router";
+import { useEffect } from "react";
 
 export const useInterview = () => {
     const { report, setReport, reports, setReports, loading, setLoading } = useInterviewContext();
+
+    const { interviewId } = useParams()
 
     const handleGenerateInterviewReport = async ({
         resume,
@@ -22,6 +26,8 @@ export const useInterview = () => {
             const response = await generateInterviewReport(request);
             toast.success(response.message);
             setReport(response.InterviewReport);
+
+            return response.interviewReport;
         } catch (error) {
             console.error("Could not generate interview report:", error);
             if (axios.isAxiosError(error)) {
@@ -29,6 +35,7 @@ export const useInterview = () => {
             } else {
                 toast.error("Could not generate interview report");
             }
+            return null;
         } finally {
             setLoading(false);
         }
@@ -40,7 +47,7 @@ export const useInterview = () => {
         try {
             const response = await getInterviewReportById(interviewId);
             setReport(response.interviewReport);
-            toast.success(response.message);
+            // toast.success(response.message);
             return response.interviewReport;
         } catch (error) {
             console.error("Could not get interview report:", error);
@@ -63,7 +70,7 @@ export const useInterview = () => {
         try {
             const response = await getAllInterviewReports();
             setReports(response.interviewReports);
-            toast.success(response.message);
+            // toast.success(response.message);
 
             return response.interviewReports;
         } catch (error) {
@@ -82,6 +89,14 @@ export const useInterview = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (interviewId)
+            handleGetInterviewReportById(interviewId);
+        else
+            handleGetInterviewReports()
+
+    }, [interviewId]);
 
     return {
         report,
