@@ -7,6 +7,13 @@ type AuthResponse = {
   };
 };
 
+type InterviewRequest = {
+    jobDescription: string;
+} & (
+    | { resume: File; selfDescription?: string }
+    | { resume?: File; selfDescription: string }
+);
+
 type InterviewQuestion = {
     question: string;
     intention: string;
@@ -35,6 +42,7 @@ type InterviewReport = {
     skillGaps: SkillGap[];
     preparationPlan: PreparationDay[];
     user: string;
+    title: string;
     createdAt?: string;
     updatedAt?: string;
 };
