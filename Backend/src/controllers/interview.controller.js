@@ -6,23 +6,81 @@ const interviewReportModel = require("../models/interviewReport.model")
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res) {
-    const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText();
+    let resumeContent;
+    if(req.file) {
+        const parsedResume = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText();
+        resumeContent = parsedResume.text;
+    }
+    
     const { selfDescription, jobDescription } = req.body;
 
-    const interviewReportByAI = await generateInterviewReport({resume: resumeContent.text, selfDescription, jobDescription});
+    if (!req.file && !selfDescription?.trim()) {
+        return res.status(400).json({
+            message: "Resume or self-description is required."
+        });
+    }
+
+    const interviewReportByAI = await generateInterviewReport({
+        ...(resumeContent && {resume: resumeContent}),
+        ...(selfDescription && { selfDescription }),
+        jobDescription
+    })
 
     const interviewReport = await interviewReportModel.create({
         user: req.user.id,
-        resume: resumeContent.text,
-        selfDescription,
+        ...(resumeContent && { resume: resumeContent }),
+        ...(selfDescription && { selfDescription }),
         jobDescription,
         ...interviewReportByAI
     })
 
     res.status(201).json({
         message: "Interview report generated successfully.",
-        interviewReport
+        data: interviewReport
     })
 }
 
-module.exports = { generateInterViewReportController }
+/**
+ * @description Controller to retrieve an interview report by ID for the authenticated user.
+ */
+async function getInterViewReportByIdController(req, res) {
+    const { interviewId } = req.params
+    if (!interviewId) {
+        return res.status(400).json({
+            message: "Bad Request. Interview id is required."
+        })
+    }
+
+    const interviewReport = await interviewReportModel.findOne({ _id: interviewId, user: req.user.id });
+
+    if (!interviewReport) {
+        return res.status(404).json({
+            message: "Interview report not found."
+        })
+    }
+
+    res.status(200).json({
+        message: "Interview report retrived successfully.",
+        data: interviewReport
+    })
+}
+
+/** 
+ * @description Controller to get all interview reports of logged in user.
+ */
+async function getAllInterViewReportsController(req, res) {
+    const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan")
+
+    if (!interviewReports) {
+        return res.status(404).json({
+            message: "Interview reports not found associated with this user."
+        })
+    }
+
+    res.status(200).json({
+        message: "Interview reports retrived successfully.",
+        data: interviewReports
+    })
+}
+
+module.exports = { generateInterViewReportController, getInterViewReportByIdController, getAllInterViewReportsController }

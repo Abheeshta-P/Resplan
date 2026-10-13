@@ -15,7 +15,7 @@ async function registerUserController(req, res) {
     if (!username || !email || !password) {
         return res.status(400).json({
             success: false,
-            message: "Please provide username, email and password"
+            message: "Please provide username, email and password."
         })
     }
 
@@ -26,7 +26,7 @@ async function registerUserController(req, res) {
 
     if (isUserAlreadyExists) {
         return res.status(400).json({
-            message: "Account already exists with this email address or username"
+            message: "Account already exists with this email address or username."
         })
     }
 
@@ -50,7 +50,7 @@ async function registerUserController(req, res) {
     res.cookie("token", token)
 
     res.status(201).json({
-        message: "User registered successfully",
+        message: "User registered successfully.",
         user: {
             id: user._id,
             username: user.username,
@@ -72,7 +72,7 @@ async function loginUserController(req, res) {
 
     if (!user) {
         return res.status(400).json({
-            message: "Invalid email. User with this email does not exists"
+            message: "Invalid email. User with this email does not exists."
         })
     }
 
@@ -80,7 +80,7 @@ async function loginUserController(req, res) {
 
     if (!isPasswordValid) {
         return res.status(400).json({
-            message: "Invalid password"
+            message: "Invalid password."
         })
     }
 
@@ -95,7 +95,7 @@ async function loginUserController(req, res) {
     res.cookie("token", token)
 
     res.status(200).json({
-        message: "User logged in successfully",
+        message: "User logged in successfully.",
         user: {
             id: user._id,
             username: user.username,
@@ -120,7 +120,7 @@ async function logoutUserController(req, res) {
     res.clearCookie("token")
 
     res.status(200).json({
-        message: "User logged out successfully"
+        message: "User logged out successfully."
     })
 }
 
@@ -135,7 +135,7 @@ async function getMeController(req, res) {
 
     // fetch user data on refresh when logged in
     res.status(200).json({
-        message:"User details fetched succesfully",
+        message:"User details fetched succesfully.",
         user: {
             id: user._id,
             username: user.username,
