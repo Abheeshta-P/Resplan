@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables 
 // Theme variables — reuse global :root colors
 $bg-page: var(--bg);
@@ -288,7 +290,7 @@ $info-border: var(--primary-border);
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, $accent 0%, darken($accent, 10%) 100%);
+    background: linear-gradient(135deg, $accent 0%, color.adjust($accent, $lightness: -10%) 100%);
     color: #fff;
     font-size: 0.9rem;
     font-weight: 600;
