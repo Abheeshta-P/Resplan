@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import '../style/interview.scss'
 import { useInterview } from '../hooks/useInterview.ts'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import LoadingScreen from '../../../components/LoadingScreen.tsx'
 
 const NAV_ITEMS = [
@@ -58,8 +58,9 @@ const RoadMapDay = ({ day }: { day: PreparationDay }) => (
 // ── Main Component 
 const Interview = () => {
     const [activeNav, setActiveNav] = useState('technical');
-    const { report, loading } = useInterview();
+    const { report, loading, getResumePdf, resumeLoading } = useInterview();
     const navigate = useNavigate();
+    const { interviewId } = useParams();
 
     const [expandedInput, setExpandedInput] = useState<string | null>(null);
 
@@ -72,8 +73,6 @@ const Interview = () => {
             <LoadingScreen text="Loading interview report..." />
         );
     }
-
-    console.log(report);
 
     if (!report) {
         return (
@@ -121,9 +120,22 @@ const Interview = () => {
                         ))}
                     </div>
                     <button
-                        // onClick={() => { getResumePdf(interviewId) }}
-                        className='button primary-button' >
-                        Download Resume
+                        onClick={() => {
+                            if (interviewId && !resumeLoading) {
+                                getResumePdf(interviewId);
+                            }
+                        }}
+                        className="button primary-button"
+                        disabled={resumeLoading}
+                    >
+                        {resumeLoading ? (
+                            <>
+                                <span className="button-spinner" />
+                                Downloading...
+                            </>
+                        ) : (
+                            'Download Resume'
+                        )}
                     </button>
                 </nav>
 

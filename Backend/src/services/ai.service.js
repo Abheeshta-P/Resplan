@@ -1,5 +1,6 @@
 const { GoogleGenAI } = require("@google/genai");
-const { z } = require("zod")
+const { z } = require("zod");
+const puppeteer = require("puppeteer");
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
@@ -81,8 +82,6 @@ Requirements:
         // Validate the generated report against the Zod schema
         const report = interviewReportSchema.parse(parsedResponse);
 
-        console.log(JSON.stringify(report, null, 2));
-
         return report;
 
     } catch (error) {
@@ -107,4 +106,93 @@ Requirements:
     }
 }
 
-module.exports = { generateInterviewReport }
+async function generatePdfFromHtml(htmlContent){
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, {waitUntil: "networkidle0"});
+
+    const pdfBuffer = await page.pdf({
+        format: "A4", 
+        margin: {
+            top: "20mm",
+            bottom: "20mm",
+            left: "15mm",
+            right: "15mm"
+        }
+    });
+
+    await browser.close();
+
+    return pdfBuffer;
+}
+
+async function generateResumePdf({ resume, selfDescription, jobDescription }) {
+    try {
+        const resumePdfSchema = z.object({
+            html: z.string().describe(
+                "The HTML content of the resume which can be converted to PDF using Puppeteer"
+            )
+        });
+
+        const pdfSchema = z.toJSONSchema(resumePdfSchema);
+
+        const prompt = `
+            Generate a resume for a candidate with the following details:
+
+            Resume: ${resume}
+            Self Description: ${selfDescription}
+            Job Description: ${jobDescription}
+
+            Return a JSON object with a single field "html" containing the HTML content of the resume, which can be converted to PDF using Puppeteer.
+
+            The resume should be tailored to the job description and highlight the candidate's strengths and relevant experience.
+
+            The content should sound human-written, not AI-generated.
+            Use a simple, professional, visually appealing design.
+            Keep the resume ATS-friendly and easy to parse.
+            Aim for 1-2 pages, focusing on relevant information and quality.
+        `;
+
+        const response = await ai.models.generateContent({
+            model: "gemini-3.5-flash-lite",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseJsonSchema: pdfSchema
+            }
+        });
+
+        if (!response.text) {
+            throw new Error("Gemini returned an empty response");
+        }
+
+        const parsedResponse = JSON.parse(response.text);
+        const pdfContent = resumePdfSchema.parse(parsedResponse);
+
+        const pdfBuffer = await generatePdfFromHtml(pdfContent.html);
+
+        return pdfBuffer;
+
+    } catch (error) {
+        if (error.status === 429) {
+            console.error("Gemini API quota exceeded.");
+
+            return {
+                success: false,
+                message: "AI request quota exceeded. Please try again later."
+            };
+        }
+
+        if (error instanceof SyntaxError) {
+            console.error("Gemini returned invalid JSON:", error.message);
+        } else if (error instanceof z.ZodError) {
+            console.error("Resume validation failed:", error.issues);
+        } else {
+            console.error("Resume PDF generation failed:", error.message);
+        }
+
+        throw error;
+    }
+}
+
+module.exports = { generateInterviewReport, generateResumePdf }

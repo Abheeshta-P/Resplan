@@ -1,12 +1,13 @@
 import toast from "react-hot-toast";
 import { useInterviewContext } from "../interview.context"
-import { generateInterviewReport, getAllInterviewReports, getInterviewReportById } from "../services/interview.api";
+import { generateInterviewReport, generateResumePdf, getAllInterviewReports, getInterviewReportById } from "../services/interview.api";
 import axios from "axios";
 import { useParams } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useInterview = () => {
     const { report, setReport, reports, setReports, loading, setLoading } = useInterviewContext();
+    const [resumeLoading, setResumeLoading] = useState(false);
 
     const { interviewId } = useParams()
 
@@ -90,6 +91,44 @@ export const useInterview = () => {
         }
     };
 
+
+    const getResumePdf = async (interviewReportId: string) => {
+        setResumeLoading(true);
+
+        try {
+            const response = await generateResumePdf({ interviewReportId });
+
+            const url = window.URL.createObjectURL(
+                new Blob([response], { type: "application/pdf" })
+            );
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", `resume_${interviewReportId}.pdf`);
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            window.URL.revokeObjectURL(url);
+
+            toast.success("Resume PDF downloaded successfully");
+        } catch (error) {
+            console.error("Could not generate resume PDF:", error);
+
+            if (axios.isAxiosError(error)) {
+                toast.error(
+                    error.response?.data?.message || "Could not generate resume PDF"
+                );
+            } else {
+                toast.error("Could not generate resume PDF");
+            }
+        } finally {
+            setResumeLoading(false);
+        }
+    };
+
+
     useEffect(() => {
         if (interviewId)
             handleGetInterviewReportById(interviewId);
@@ -99,11 +138,13 @@ export const useInterview = () => {
     }, [interviewId]);
 
     return {
-        report,
-        reports,
-        loading,
-        handleGenerateInterviewReport,
-        handleGetInterviewReportById,
-        handleGetInterviewReports
-    }
+    report,
+    reports,
+    loading,
+    resumeLoading,
+    handleGenerateInterviewReport,
+    handleGetInterviewReportById,
+    handleGetInterviewReports,
+    getResumePdf
+};
 }
