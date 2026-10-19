@@ -1,8 +1,7 @@
 require("dotenv").config()
 const app = require("./src/app")
-const connectToDB = require("./src/config/database")
+// connectToDB is already handled during app initialization
 
-connectToDB()
 
 // run server
 app.listen(3000,()=>{
