@@ -8,7 +8,8 @@ async function connectToDB() {
     }
 
     if (!process.env.MONGODB_URI) {
-        throw new Error("MONGODB_URI environment variable is missing in server configuration.");
+        console.error("Warning: MONGODB_URI is not defined in environment variables.");
+        return;
     }
 
     try {
@@ -17,7 +18,6 @@ async function connectToDB() {
         console.log("Connected to MongoDB");
     } catch (error) {
         console.error("MongoDB connection error:", error);
-        throw error;
     }
 }
 

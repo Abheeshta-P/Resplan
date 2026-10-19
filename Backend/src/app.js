@@ -12,9 +12,11 @@ const interviewRouter = require("./routes/interview.routes")
 
 const app = express()
 
+// Connect to MongoDB
+connectToDB()
+
 app.use(express.json())
 app.use(cookieParser())
-
 const allowedOrigins = [
     "https://resplans.vercel.app",
     "https://opulent-invention-v6xg44vjgxqgfqg7-5173.app.github.dev",
@@ -23,27 +25,21 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: (origin, callback) => {
-        // allow requests with no origin (like mobile apps, curl, or same-origin)
-        if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+        // Allow requests with no origin (like same-origin, curl, or mobile)
+        if (!origin) return callback(null, true)
+
+        const isAllowed = allowedOrigins.includes(origin) ||
+                          origin.endsWith(".vercel.app") ||
+                          origin.endsWith(".app.github.dev")
+
+        if (isAllowed) {
             return callback(null, true)
+        } else {
+            return callback(null, false)
         }
-        return callback(null, true)
     },
     credentials: true
 }))
-
-// Connect to DB before handling requests (crucial for Vercel serverless)
-app.use(async (req, res, next) => {
-    try {
-        await connectToDB()
-        next()
-    } catch (err) {
-        return res.status(500).json({
-            message: "Database connection failed. Please check MONGODB_URI in environment variables.",
-            error: err.message
-        })
-    }
-})
 
 // using all the routes here 
 app.use("/api/auth", authRouter)
