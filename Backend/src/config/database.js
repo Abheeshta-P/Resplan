@@ -1,25 +1,35 @@
 const mongoose = require("mongoose");
 
-let isConnected = false;
+let cachedPromise = null;
 
 async function connectToDB() {
-    if (isConnected || mongoose.connection.readyState >= 1) {
-        return;
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection;
     }
-
 
     if (!process.env.MONGODB_URI) {
-        console.error("Warning: MONGODB_URI is not defined in environment variables.");
-        return;
+        throw new Error("MONGODB_URI is not defined in environment variables. Please add MONGODB_URI in Vercel project settings.");
     }
 
-    try {
-        const db = await mongoose.connect(process.env.MONGODB_URI);
-        isConnected = db.connections[0].readyState === 1;
-        console.log("Connected to MongoDB");
-    } catch (error) {
-        console.error("MongoDB connection error:", error);
+    if (mongoose.connection.readyState === 2) {
+        await mongoose.connection.asPromise();
+        return mongoose.connection;
     }
+
+    if (!cachedPromise) {
+        cachedPromise = mongoose.connect(process.env.MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000,
+            bufferCommands: false
+        }).catch(err => {
+            cachedPromise = null;
+            throw err;
+        });
+    }
+
+    await cachedPromise;
+    console.log("Connected to MongoDB");
+    return mongoose.connection;
 }
+
 
 module.exports = connectToDB;

@@ -1,4 +1,3 @@
-require("dotenv").config()
 const app = require("./src/app")
 // connectToDB is already handled during app initialization
 

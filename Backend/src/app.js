@@ -12,8 +12,9 @@ const interviewRouter = require("./routes/interview.routes")
 
 const app = express()
 
-// Connect to MongoDB
-connectToDB()
+// Trigger non-blocking background connection attempt on cold start
+connectToDB().catch(err => console.error("Initial DB connection note:", err.message))
+
 
 app.use(express.json())
 app.use(cookieParser())
@@ -41,6 +42,8 @@ app.use(cors({
     credentials: true
 }))
 
+const mongoose = require("mongoose")
+
 // Helper to safely unwrap routers across CJS and ESM bundling
 const getRouter = (r) => {
     if (typeof r === "function") return r;
@@ -48,9 +51,53 @@ const getRouter = (r) => {
     return null;
 };
 
-// Health check endpoint for uptime/monitoring
+// Health check endpoint for uptime/monitoring (does not require DB)
 app.get("/api/health", (req, res) => {
     res.status(200).json({ status: "ok" });
+});
+
+// Diagnostic endpoint to check environment variables and DB connection state
+app.get("/api/db-status", async (req, res) => {
+    const hasUri = !!process.env.MONGODB_URI;
+    const uriPreview = process.env.MONGODB_URI
+        ? process.env.MONGODB_URI.replace(/:([^:@]+)@/, ":****@")
+        : "NOT_SET";
+
+    let dbError = null;
+    try {
+        await connectToDB();
+    } catch (err) {
+        dbError = err.message;
+    }
+
+    res.status(200).json({
+        database: {
+            hasUri,
+            uriPreview,
+            readyState: mongoose.connection.readyState,
+            state: ["disconnected", "connected", "connecting", "disconnecting"][mongoose.connection.readyState] || "unknown",
+            error: dbError
+        },
+        env: {
+            hasJwtSecret: !!process.env.JWT_SECRET,
+            hasGeminiKey: !!process.env.GOOGLE_GENAI_API_KEY
+        }
+    });
+});
+
+// Ensure DB is connected for incoming API requests
+app.use(async (req, res, next) => {
+    try {
+        await connectToDB();
+        next();
+    } catch (error) {
+        console.error("Database connection failure on request:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Database connection failed",
+            details: error.message
+        });
+    }
 });
 
 // using all the routes here 
@@ -73,6 +120,15 @@ if (interviewHandler) {
         res.status(500).json({ error: "Interview service unavailable" });
     });
 }
+
+// Global error handling middleware
+app.use((err, req, res, next) => {
+    console.error("Unhandled Application Error:", err);
+    res.status(err.status || 500).json({
+        success: false,
+        message: err.message || "Internal Server Error"
+    });
+});
 
 module.exports = app;
 module.exports.default = app;
