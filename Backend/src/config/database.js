@@ -31,5 +31,4 @@ async function connectToDB() {
     return mongoose.connection;
 }
 
-
 module.exports = connectToDB;

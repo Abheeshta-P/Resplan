@@ -34,3 +34,4 @@ authRouter.get("/get-me", authMiddleware.authUser, authController.getMeControlle
 
 module.exports = authRouter;
 module.exports.default = authRouter;
+module.exports.authRouter = authRouter;

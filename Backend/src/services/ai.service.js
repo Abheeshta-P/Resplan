@@ -1,6 +1,6 @@
 const { GoogleGenAI } = require("@google/genai");
 const { z } = require("zod");
-const puppeteer = require("puppeteer");
+
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY
@@ -107,7 +107,9 @@ Requirements:
 }
 
 async function generatePdfFromHtml(htmlContent){
+    const puppeteer = require("puppeteer");
     const browser = await puppeteer.launch();
+
     const page = await browser.newPage();
     await page.setContent(htmlContent, {waitUntil: "networkidle0"});
 

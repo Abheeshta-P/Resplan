@@ -35,3 +35,4 @@ interviewRouter.post("/resume/pdf/:interviewReportId", authMiddleware.authUser, 
 
 module.exports = interviewRouter;
 module.exports.default = interviewRouter;
+module.exports.interviewRouter = interviewRouter;

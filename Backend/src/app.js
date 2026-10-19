@@ -6,15 +6,29 @@ const cookieParser = require("cookie-parser")
 const cors = require("cors")
 const connectToDB = require("./config/database")
 
-// require all the routes here 
-const authRouter = require("./routes/auth.routes")
-const interviewRouter = require("./routes/interview.routes")
+const mongoose = require("mongoose")
+
+// Safely require routes with try/catch
+let authRouter = null, authRequireError = null;
+try {
+    authRouter = require("./routes/auth.routes");
+} catch (err) {
+    authRequireError = err;
+    console.error("Critical: Failed to require auth.routes:", err);
+}
+
+let interviewRouter = null, interviewRequireError = null;
+try {
+    interviewRouter = require("./routes/interview.routes");
+} catch (err) {
+    interviewRequireError = err;
+    console.error("Critical: Failed to require interview.routes:", err);
+}
 
 const app = express()
 
 // Trigger non-blocking background connection attempt on cold start
 connectToDB().catch(err => console.error("Initial DB connection note:", err.message))
-
 
 app.use(express.json())
 app.use(cookieParser())
@@ -42,12 +56,19 @@ app.use(cors({
     credentials: true
 }))
 
-const mongoose = require("mongoose")
-
 // Helper to safely unwrap routers across CJS and ESM bundling
 const getRouter = (r) => {
     if (typeof r === "function") return r;
-    if (r && typeof r.default === "function") return r.default;
+    if (!r || typeof r !== "object") return null;
+    if (typeof r.default === "function") return r.default;
+    if (typeof r.interviewRouter === "function") return r.interviewRouter;
+    if (typeof r.authRouter === "function") return r.authRouter;
+    if (typeof r.router === "function") return r.router;
+    for (const key of Object.keys(r)) {
+        if (typeof r[key] === "function" && (r[key].name === "router" || typeof r[key].use === "function")) {
+            return r[key];
+        }
+    }
     return null;
 };
 
@@ -56,7 +77,7 @@ app.get("/api/health", (req, res) => {
     res.status(200).json({ status: "ok" });
 });
 
-// Diagnostic endpoint to check environment variables and DB connection state
+// Diagnostic endpoint to check environment variables, DB connection state, and routers
 app.get("/api/db-status", async (req, res) => {
     const hasUri = !!process.env.MONGODB_URI;
     const uriPreview = process.env.MONGODB_URI
@@ -81,6 +102,13 @@ app.get("/api/db-status", async (req, res) => {
         env: {
             hasJwtSecret: !!process.env.JWT_SECRET,
             hasGeminiKey: !!process.env.GOOGLE_GENAI_API_KEY
+        },
+        routers: {
+            authRouterType: typeof authRouter,
+            authHandlerLoaded: !!authHandler,
+            interviewRouterType: typeof interviewRouter,
+            interviewHandlerLoaded: !!interviewHandler,
+            interviewRequireError: interviewRequireError ? interviewRequireError.message : null
         }
     });
 });
@@ -107,7 +135,12 @@ if (authHandler) {
 } else {
     console.error("Critical: authRouter is not a function:", typeof authRouter, authRouter);
     app.use("/api/auth", (req, res) => {
-        res.status(500).json({ error: "Auth service unavailable" });
+        res.status(500).json({
+            error: "Auth service unavailable",
+            details: authRequireError ? authRequireError.message : "Router was not a function",
+            type: typeof authRouter,
+            keys: authRouter && typeof authRouter === "object" ? Object.keys(authRouter) : []
+        });
     });
 }
 
@@ -117,7 +150,12 @@ if (interviewHandler) {
 } else {
     console.error("Critical: interviewRouter is not a function:", typeof interviewRouter, interviewRouter);
     app.use("/api/interview", (req, res) => {
-        res.status(500).json({ error: "Interview service unavailable" });
+        res.status(500).json({
+            error: "Interview service unavailable",
+            details: interviewRequireError ? interviewRequireError.message : "Router was not a function",
+            type: typeof interviewRouter,
+            keys: interviewRouter && typeof interviewRouter === "object" ? Object.keys(interviewRouter) : []
+        });
     });
 }
 
