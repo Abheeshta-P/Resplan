@@ -26,7 +26,7 @@ export const useInterview = () => {
 
             const response = await generateInterviewReport(request);
             toast.success(response.message);
-            setReport(response.InterviewReport);
+            setReport(response.interviewReport);
 
             return response.interviewReport;
         } catch (error) {
@@ -70,12 +70,20 @@ export const useInterview = () => {
 
         try {
             const response = await getAllInterviewReports();
-            setReports(response.interviewReports);
-            // toast.success(response.message);
+            setReports(response.interviewReports || []);
 
-            return response.interviewReports;
+            return response.interviewReports || [];
         } catch (error) {
             console.error("Could not get interview reports:", error);
+            setReports([]);
+
+            if (axios.isAxiosError(error) && error.response?.status === 404) {
+                // Info toast instead of error toast when user has 0 reports
+                toast(error.response?.data?.message || "No previous interview plans found", {
+                    icon: "ℹ️"
+                });
+                return [];
+            }
 
             if (axios.isAxiosError(error)) {
                 toast.error(

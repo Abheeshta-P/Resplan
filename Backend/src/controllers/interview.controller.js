@@ -103,9 +103,9 @@ async function getAllInterViewReportsController(req, res) {
     try {
         const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan");
 
-        if (!interviewReports) {
+        if (!interviewReports || interviewReports.length === 0) {
             return res.status(404).json({
-                message: "Interview reports not found associated with this user."
+                message: "No interview reports found associated with this user."
             });
         }
 
