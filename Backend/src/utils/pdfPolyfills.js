@@ -98,6 +98,34 @@ if (typeof globalThis.DOMRect === "undefined") {
     global.DOMRect = DOMRect;
 }
 
+// Safely intercept require("@napi-rs/canvas") if the native binary is missing
+const Module = require("module");
+const origRequire = Module.prototype.require;
+Module.prototype.require = function (id) {
+    if (id === "@napi-rs/canvas") {
+        try {
+            return origRequire.apply(this, arguments);
+        } catch {
+            return {
+                DOMMatrix: globalThis.DOMMatrix,
+                Path2D: globalThis.Path2D,
+                ImageData: globalThis.ImageData,
+                DOMPoint: globalThis.DOMPoint,
+                DOMRect: globalThis.DOMRect,
+                createCanvas: (w, h) => ({
+                    getContext: () => ({
+                        drawImage: () => {},
+                        getImageData: () => ({ data: new Uint8ClampedArray(w * h * 4) })
+                    }),
+                    width: w,
+                    height: h
+                })
+            };
+        }
+    }
+    return origRequire.apply(this, arguments);
+};
+
 module.exports = {
     DOMMatrix: globalThis.DOMMatrix,
     ImageData: globalThis.ImageData,

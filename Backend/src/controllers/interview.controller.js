@@ -3,6 +3,47 @@ const { generateInterviewReport, generateResumePdf } = require("../services/ai.s
 const interviewReportModel = require("../models/interviewReport.model");
 
 /**
+ * Extract plain text from PDF buffer using pdf-parse with CanvasFactory,
+ * with automatic fallback to pure JavaScript pdf-parser (pdf2json).
+ */
+async function extractResumeText(fileBuffer) {
+    // Strategy 1: pdf-parse with CanvasFactory and canvas interception
+    try {
+        require("../utils/pdfPolyfills");
+        const { CanvasFactory } = require("pdf-parse/worker");
+        const { PDFParse } = require("pdf-parse");
+
+        const parser = new PDFParse({
+            data: Uint8Array.from(fileBuffer),
+            CanvasFactory
+        });
+        const parsed = await parser.getText();
+        if (parsed && parsed.text && parsed.text.trim()) {
+            return parsed.text;
+        }
+    } catch (parseErr) {
+        console.warn("pdf-parse extraction failed, falling back to pdf-parser:", parseErr.message);
+    }
+
+    // Strategy 2: Pure JS pdf-parser (zero native bindings or canvas dependencies)
+    return new Promise((resolve, reject) => {
+        try {
+            const pdfParser = require("pdf-parser");
+            pdfParser.pdf2json(fileBuffer, (err, pdf) => {
+                if (err) return reject(err);
+                if (!pdf || !pdf.pages) return resolve("");
+                const text = pdf.pages
+                    .flatMap(p => (p.texts || []).map(t => t.text))
+                    .join(" ");
+                resolve(text);
+            });
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
+/**
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res) {
@@ -10,11 +51,7 @@ async function generateInterViewReportController(req, res) {
         let resumeContent;
         if (req.file) {
             try {
-                // Ensure polyfills are ready in case of dynamic execution
-                require("../utils/pdfPolyfills");
-                const pdfParse = require("pdf-parse");
-                const parsedResume = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText();
-                resumeContent = parsedResume.text;
+                resumeContent = await extractResumeText(req.file.buffer);
             } catch (pdfErr) {
                 console.error("PDF Parsing error:", pdfErr);
                 return res.status(400).json({
