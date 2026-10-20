@@ -1,4 +1,5 @@
 // server create and middlewares config and export the server
+require("./utils/pdfPolyfills")
 require("dotenv").config()
 
 const express = require("express")
