@@ -138,7 +138,32 @@ async function getInterViewReportByIdController(req, res) {
  */
 async function getAllInterViewReportsController(req, res) {
     try {
-        const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan");
+        const { page, limit } = req.query;
+        let query = interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan");
+
+        if (page && limit) {
+            const pageNum = parseInt(page, 10) || 1;
+            const limitNum = parseInt(limit, 10) || 10;
+            const skip = (pageNum - 1) * limitNum;
+            const total = await interviewReportModel.countDocuments({ user: req.user.id });
+            const interviewReports = await query.skip(skip).limit(limitNum);
+
+            if (!interviewReports || interviewReports.length === 0) {
+                return res.status(404).json({
+                    message: "No interview reports found associated with this user."
+                });
+            }
+
+            return res.status(200).json({
+                message: "Interview reports retrieved successfully.",
+                interviewReports,
+                page: pageNum,
+                limit: limitNum,
+                total
+            });
+        }
+
+        const interviewReports = await query;
 
         if (!interviewReports || interviewReports.length === 0) {
             return res.status(404).json({

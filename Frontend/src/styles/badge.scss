@@ -1,0 +1,92 @@
+// =============================================================================
+// Unified Badge Design System (Interview-page inspired: dim, subtle, non-AI)
+// =============================================================================
+
+// Muted, dim palette matching the interview page
+$dim-green: #4f9668; // Muted green — safe / high match / required
+$dim-amber: #b58a3a; // Muted amber — warning / mid match
+$dim-red: #c75b5b;   // Muted red — critical / low match
+$dim-gray: #888888;  // Muted gray — neutral / best / counts
+$dim-purple: #9d8ec7;// Muted lavender — intention
+
+.app-badge,
+.badge,
+.brand-pill,
+.preview-badge,
+.match-badge,
+.plans-pill,
+.skill-tag,
+.roadmap-day__badge,
+.content-header__count,
+.q-card__tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+    padding: 0.25rem 0.65rem;
+    border-radius: 1.25rem;
+    border: none;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+    text-align: left;
+    letter-spacing: 0.01em;
+    font-family: inherit;
+    box-sizing: border-box;
+    cursor: default;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+// -----------------------------------------------------------------------------
+// Dim Semantic Color Variants (Soft 10% opacity backgrounds, no neon)
+// -----------------------------------------------------------------------------
+
+// 1. Muted Dim Green (High match, Brand, Required, Low severity, Roadmap Day, Model Answer)
+.badge--primary,
+.badge--required,
+.badge--success,
+.brand-pill,
+.preview-badge,
+.match-badge--high,
+.skill-tag--low,
+.roadmap-day__badge,
+.q-card__tag--answer {
+    color: $dim-green;
+    background-color: rgba(79, 150, 104, 0.12);
+}
+
+// 2. Muted Dim Amber (Mid match, Medium severity)
+.badge--warning,
+.match-badge--mid,
+.skill-tag--medium {
+    color: $dim-amber;
+    background-color: rgba(181, 138, 58, 0.12);
+}
+
+// 3. Muted Dim Red (Low match, High severity)
+.badge--danger,
+.match-badge--low,
+.skill-tag--high {
+    color: $dim-red;
+    background-color: rgba(199, 91, 91, 0.12);
+}
+
+// 4. Muted Dim Gray (Counters, Best/Recommended, Secondary labels)
+.badge--neutral,
+.badge--best,
+.plans-pill,
+.content-header__count {
+    color: $dim-gray;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+// 5. Muted Dim Purple (Intention tag)
+.badge--accent,
+.q-card__tag--intention {
+    color: $dim-purple;
+    background-color: rgba(157, 142, 199, 0.12);
+}

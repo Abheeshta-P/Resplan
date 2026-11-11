@@ -6,67 +6,6 @@
     display: flex;
     flex-direction: column;
 
-    /* Top Navigation Bar */
-    .landing-nav {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        width: 100%;
-        background-color: rgba(22, 22, 22, 0.85);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--border);
-
-        &__container {
-            max-width: 1140px;
-            margin: 0 auto;
-            padding: 1.15rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        &__brand {
-            font-size: 1.35rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        &__actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-
-            .nav-link {
-                color: var(--text-secondary);
-                text-decoration: none;
-                font-size: 0.925rem;
-                font-weight: 500;
-                padding: 0.5rem 0.75rem;
-                border-radius: 0.5rem;
-                transition: color 0.2s ease;
-
-                &:hover {
-                    color: var(--text);
-                }
-            }
-
-            .nav-btn {
-                padding: 0.55rem 1.25rem;
-                font-size: 0.9rem;
-                border-radius: 0.65rem;
-                text-decoration: none;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-            }
-        }
-    }
-
     /* Hero Section */
     .landing-hero {
         padding: clamp(4rem, 8vh, 6.5rem) 1.5rem 4rem;
@@ -187,13 +126,6 @@
 
             .preview-badge {
                 align-self: flex-start;
-                padding: 0.25rem 0.65rem;
-                border-radius: 2rem;
-                font-size: 0.75rem;
-                font-weight: 600;
-                background-color: var(--primary-light);
-                color: var(--primary-text);
-                border: 1px solid var(--primary-border);
             }
 
             h3 {

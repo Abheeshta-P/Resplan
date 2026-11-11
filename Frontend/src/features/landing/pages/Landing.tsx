@@ -1,39 +1,15 @@
 import { Link } from 'react-router'
 import '../style/landing.scss'
 import { useAuth } from '../../auth/hooks/useAuth'
+import Navbar from '../../../components/Navbar'
 
 const Landing = () => {
     const { user } = useAuth();
 
     return (
         <div className="landing-page">
-            {/* Top Navigation */}
-            <header className="landing-nav">
-                <div className="landing-nav__container">
-                    <Link to="/" className="landing-nav__brand">
-                        <span>Resplan</span>
-                    </Link>
-
-                    <div className="landing-nav__actions">
-                        {user ? (
-                            <>
-                                <Link to="/dashboard" className="button primary-button nav-btn">
-                                    Open Dashboard
-                                </Link>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/login" className="nav-link">
-                                    Sign In
-                                </Link>
-                                <Link to="/register" className="button primary-button nav-btn">
-                                    Get Started
-                                </Link>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </header>
+            {/* Shared Top Navigation */}
+            <Navbar />
 
             {/* Hero Section */}
             <main>

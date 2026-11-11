@@ -205,15 +205,6 @@ $severity-low: #4f9668; // Muted green — low severity
         color: $text-primary;
         margin: 0;
     }
-
-    &__count {
-        font-size: 0.8rem;
-        color: $text-muted;
-        background-color: $bg-panel;
-        padding: 0.15rem 0.6rem;
-        border-radius: 2rem;
-        border: 1px solid $border-color;
-    }
 }
 
 //  Question Cards 
@@ -294,22 +285,6 @@ $severity-low: #4f9668; // Muted green — low severity
             line-height: 1.6;
         }
     }
-
-    &__tag {
-        font-size: 0.68rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        width: fit-content;
-
-        &--intention {
-            color: #a78bfa;
-        }
-
-        &--answer {
-            color: #3fb950;
-        }
-    }
 }
 
 //  Road Map 
@@ -356,12 +331,6 @@ $severity-low: #4f9668; // Muted green — low severity
         display: flex;
         align-items: center;
         gap: 0.6rem;
-    }
-
-    &__badge {
-        font-size: 0.7rem;
-        font-weight: 700;
-        color: $accent;
     }
 
     &__focus {
@@ -504,34 +473,7 @@ $severity-low: #4f9668; // Muted green — low severity
 }
 
 .skill-tag {
-    display: inline-flex;
-    flex: 0 1 auto;
-    min-width: 0;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow-wrap: anywhere;
-
-    font-size: 0.775rem;
-    font-weight: 500;
-    padding: 0.3rem 0.7rem;
-    border-radius: 1.25rem;
-    border: none;
     cursor: default;
-
-    &--high {
-        color: $severity-high;
-        background-color: rgba($severity-high, 0.1);
-    }
-
-    &--medium {
-        color: $severity-medium;
-        background-color: rgba($severity-medium, 0.1);
-    }
-
-    &--low {
-        color: $severity-low;
-        background-color: rgba($severity-low, 0.1);
-    }
 }
 
 .report-inputs {
