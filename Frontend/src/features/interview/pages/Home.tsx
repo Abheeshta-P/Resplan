@@ -409,7 +409,6 @@ const Home = () => {
                         {/* Sticky Action Footer */}
                         <div className="workspace-footer">
                             <div className="footer-status">
-                                <span className="status-dot"></span>
                                 <span>Either resume or self-description is required &bull; ~30s turnaround</span>
                             </div>
 

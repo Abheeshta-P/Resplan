@@ -18,7 +18,7 @@ const Landing = () => {
                     </p>
                     <div className="landing-hero__cta-group">
                         <Link to={user ? "/dashboard" : "/register"} className="button primary-button hero-btn-primary">
-                            {user ? "Go to Dashboard" : "Start Preparing — Free"}
+                            {user ? "Go to Dashboard" : "Start Preparing - Free"}
                         </Link>
                         {!user && (
                             <Link to="/login" className="hero-btn-secondary">
