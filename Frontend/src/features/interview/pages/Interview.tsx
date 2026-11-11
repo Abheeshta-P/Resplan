@@ -152,28 +152,19 @@ const Interview = () => {
                     <div className="nav-group">
                         <span className="nav-group__title">Sections</span>
                         <div className="nav-group__list">
-                            {NAV_ITEMS.map((item) => {
-                                const count =
-                                    item.id === 'technical'
-                                        ? report.technicalQuestions.length
-                                        : item.id === 'behavioral'
-                                        ? report.behavioralQuestions.length
-                                        : `${report.preparationPlan.length}d`
-
-                                return (
-                                    <button
-                                        key={item.id}
-                                        type="button"
-                                        className={`nav-item ${activeNav === item.id ? 'nav-item--active' : ''}`}
-                                        onClick={() => setActiveNav(item.id)}
-                                    >
-                                        <div className="nav-item__left">
-                                            <span className="nav-item__icon">{item.icon}</span>
-                                            <span className="nav-item__label">{item.label}</span>
-                                        </div>
-                                    </button>
-                                )
-                            })}
+                            {NAV_ITEMS.map((item) => (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    className={`nav-item ${activeNav === item.id ? 'nav-item--active' : ''}`}
+                                    onClick={() => setActiveNav(item.id)}
+                                >
+                                    <div className="nav-item__left">
+                                        <span className="nav-item__icon">{item.icon}</span>
+                                        <span className="nav-item__label">{item.label}</span>
+                                    </div>
+                                </button>
+                            ))}
                         </div>
                     </div>
 
@@ -265,10 +256,7 @@ const Interview = () => {
 
                     {/* Skill Gaps Box */}
                     <div className="sidebar-widget skill-gaps-widget">
-                        <div className="widget-header-row">
-                            <span className="widget-title">Skill Gaps</span>
-                            <span className="widget-count">{report.skillGaps.length} identified</span>
-                        </div>
+                        <span className="widget-title">Skill Gaps</span>
                         <div className="skill-gaps-list">
                             {report.skillGaps.map((gap, i) => (
                                 <span key={i} className={`skill-tag skill-tag--${gap.severity}`}>

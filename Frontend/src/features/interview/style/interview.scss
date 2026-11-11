@@ -455,17 +455,6 @@ $dim-red: #c75b5b;
             color: var(--text-muted);
             margin: 0;
         }
-
-        .widget-header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .widget-count {
-                font-size: 0.72rem;
-                color: var(--text-muted);
-            }
-        }
     }
 
     .sidebar-divider {
