@@ -13,7 +13,7 @@ const Navbar = ({ badge }: NavbarProps) => {
     return (
         <header className="app-navbar">
             <div className="app-navbar__container">
-                <Link to={user ? "/dashboard" : "/"} className="app-navbar__brand">
+                <Link to="/" className="app-navbar__brand" title="Resplan Home">
                     <span className="brand-name">Resplan</span>
                     {badge && <span className="brand-pill">{badge}</span>}
                 </Link>
@@ -21,9 +21,6 @@ const Navbar = ({ badge }: NavbarProps) => {
                 <div className="app-navbar__actions">
                     {user ? (
                         <>
-                            <span className="user-tag" title={user.email || user.username}>
-                                {user.username || user.email}
-                            </span>
                             {!isDashboard && (
                                 <Link to="/dashboard" className="button primary-button nav-btn">
                                     Dashboard

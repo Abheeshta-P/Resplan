@@ -1,16 +1,12 @@
 import { Link } from 'react-router'
 import '../style/landing.scss'
 import { useAuth } from '../../auth/hooks/useAuth'
-import Navbar from '../../../components/Navbar'
 
 const Landing = () => {
     const { user } = useAuth();
 
     return (
         <div className="landing-page">
-            {/* Shared Top Navigation */}
-            <Navbar />
-
             {/* Hero Section */}
             <main>
                 <section className="landing-hero">
@@ -98,15 +94,6 @@ const Landing = () => {
                     </div>
                 </section>
             </main>
-
-            {/* Footer */}
-            <footer className="landing-footer">
-                <span>&copy; {new Date().getFullYear()} Resplan. All rights reserved.</span>
-                <div className="footer-links">
-                    <Link to="/login">Sign In</Link>
-                    <Link to="/register">Create Account</Link>
-                </div>
-            </footer>
         </div>
     );
 };

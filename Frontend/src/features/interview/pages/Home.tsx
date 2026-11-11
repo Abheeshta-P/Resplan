@@ -3,7 +3,6 @@ import "../style/home.scss"
 import { useInterview } from '../hooks/useInterview.ts'
 import { useNavigate } from 'react-router'
 import LoadingScreen from '../../../components/LoadingScreen.tsx'
-import Navbar from '../../../components/Navbar.tsx'
 
 const PAGE_SIZE = 8
 
@@ -123,9 +122,6 @@ const Home = () => {
 
     return (
         <div className="dashboard-page">
-            {/* Shared Top Navigation */}
-            <Navbar />
-
             {/* Mobile / Tablet Tab Switcher (< 1024px) */}
             <div className="studio-tab-bar">
                 <button

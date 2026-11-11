@@ -265,34 +265,6 @@
             }
         }
     }
-
-    /* Footer */
-    .landing-footer {
-        padding: 2.5rem 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        max-width: 1140px;
-        width: 100%;
-        margin: 0 auto;
-        color: var(--text-muted);
-        font-size: 0.85rem;
-
-        a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s ease;
-
-            &:hover {
-                color: var(--text);
-            }
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-    }
 }
 
 /* Responsive adjustments */
@@ -304,12 +276,6 @@
 
         .landing-features .features-grid {
             grid-template-columns: 1fr;
-        }
-
-        .landing-footer {
-            flex-direction: column;
-            gap: 1rem;
-            text-align: center;
         }
     }
 }
