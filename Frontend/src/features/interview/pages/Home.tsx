@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react'
 import "../style/home.scss"
 import { useInterview } from '../hooks/useInterview.ts'
+import { useAuth } from '../../auth/hooks/useAuth.ts'
 import { useNavigate } from 'react-router'
 import LoadingScreen from '../../../components/LoadingScreen.tsx'
 
 const Home = () => {
-
+    const { user, handleLogout } = useAuth();
     const { loading, handleGenerateInterviewReport, reports } = useInterview()
     const [jobDescription, setJobDescription] = useState<string>("")
     const [selfDescription, setSelfDescription] = useState<string>("")
@@ -69,6 +70,20 @@ const Home = () => {
 
     return (
         <div className='home-page'>
+
+            {/* Dashboard Topbar */}
+            <header className='dashboard-topbar'>
+                <div className='dashboard-topbar__brand'>
+                    <span className='brand-name'>Resplan</span>
+                    <span className='brand-badge'>Workspace</span>
+                </div>
+                <div className='dashboard-topbar__user'>
+                    <span className='user-id'>{user?.username || user?.email}</span>
+                    <button onClick={handleLogout} className='logout-btn'>
+                        Sign Out
+                    </button>
+                </div>
+            </header>
 
             {/* Page Header */}
             <header className='page-header'>

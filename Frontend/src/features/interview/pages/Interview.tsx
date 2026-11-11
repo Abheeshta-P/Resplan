@@ -86,9 +86,9 @@ const Interview = () => {
 
                     <button
                         className="interview-empty__button"
-                        onClick={() => navigate("/")}
+                        onClick={() => navigate("/dashboard")}
                     >
-                        Back to Home Page
+                        Back to Dashboard
                     </button>
                 </div>
             </main>
@@ -107,6 +107,14 @@ const Interview = () => {
                 {/* ── Left Nav ── */}
                 <nav className='interview-nav'>
                     <div className="nav-content">
+                        <button
+                            className="interview-nav__item"
+                            onClick={() => navigate("/dashboard")}
+                            style={{ marginBottom: '0.75rem', color: 'var(--text-secondary)' }}
+                        >
+                            <span className='interview-nav__icon'>←</span>
+                            Dashboard
+                        </button>
                         <p className='interview-nav__label'>Sections</p>
                         {NAV_ITEMS.map(item => (
                             <button

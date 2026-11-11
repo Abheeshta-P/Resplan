@@ -1,0 +1,383 @@
+.landing-page {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+
+    /* Top Navigation Bar */
+    .landing-nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        width: 100%;
+        background-color: rgba(22, 22, 22, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+
+        &__container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 1.15rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        &__brand {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        &__actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .nav-link {
+                color: var(--text-secondary);
+                text-decoration: none;
+                font-size: 0.925rem;
+                font-weight: 500;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.5rem;
+                transition: color 0.2s ease;
+
+                &:hover {
+                    color: var(--text);
+                }
+            }
+
+            .nav-btn {
+                padding: 0.55rem 1.25rem;
+                font-size: 0.9rem;
+                border-radius: 0.65rem;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+
+    /* Hero Section */
+    .landing-hero {
+        padding: clamp(4rem, 8vh, 6.5rem) 1.5rem 4rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 900px;
+        margin: 0 auto;
+
+        &__title {
+            font-size: clamp(2.35rem, 5.5vw, 3.75rem);
+            font-weight: 700;
+            line-height: 1.18;
+            letter-spacing: -0.035em;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+
+            .highlight {
+                color: var(--primary-text);
+            }
+        }
+
+        &__subtitle {
+            font-size: clamp(1.05rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 680px;
+            margin: 0 auto 2.25rem;
+        }
+
+        &__cta-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+
+            .hero-btn-primary {
+                padding: 0.85rem 2rem;
+                font-size: 1rem;
+                font-weight: 600;
+                border-radius: 0.75rem;
+                text-decoration: none;
+            }
+
+            .hero-btn-secondary {
+                padding: 0.85rem 1.75rem;
+                font-size: 1rem;
+                font-weight: 500;
+                border-radius: 0.75rem;
+                color: var(--text);
+                background-color: var(--bg-secondary);
+                border: 1px solid var(--border);
+                text-decoration: none;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    border-color: var(--border-hover);
+                    background-color: var(--bg-tertiary);
+                }
+            }
+        }
+    }
+
+    /* Product Preview Mockup Card */
+    .landing-preview {
+        max-width: 1040px;
+        width: calc(100% - 3rem);
+        margin: 0 auto 5rem;
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        overflow: hidden;
+
+        &__header {
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .preview-window-dots {
+                display: flex;
+                gap: 0.4rem;
+
+                span {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background-color: var(--border-hover);
+                }
+            }
+
+            .preview-title {
+                font-size: 0.85rem;
+                font-weight: 500;
+                color: var(--text-muted);
+            }
+        }
+
+        &__body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .preview-stat-card {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+
+            .preview-badge {
+                align-self: flex-start;
+                padding: 0.25rem 0.65rem;
+                border-radius: 2rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+                background-color: var(--primary-light);
+                color: var(--primary-text);
+                border: 1px solid var(--primary-border);
+            }
+
+            h3 {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--text);
+            }
+
+            p {
+                font-size: 0.875rem;
+                color: var(--text-secondary);
+                line-height: 1.5;
+            }
+        }
+
+        .preview-sample-box {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+
+            .sample-label {
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--text-muted);
+            }
+
+            .sample-q {
+                font-size: 0.95rem;
+                font-weight: 600;
+                color: var(--text);
+            }
+
+            .sample-ans {
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                line-height: 1.5;
+            }
+        }
+    }
+
+    /* Features Section */
+    .landing-features {
+        max-width: 1140px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 1.5rem 5rem;
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 3rem;
+
+            h2 {
+                font-size: 2rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                margin-bottom: 0.5rem;
+            }
+
+            p {
+                color: var(--text-secondary);
+                font-size: 1rem;
+            }
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+
+            .feature-card {
+                background-color: var(--bg-secondary);
+                border: 1px solid var(--border);
+                border-radius: 0.875rem;
+                padding: 2rem 1.75rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.85rem;
+                transition: border-color 0.2s ease;
+
+                &:hover {
+                    border-color: var(--border-hover);
+                }
+
+                .feature-number {
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: var(--primary-text);
+                }
+
+                h3 {
+                    font-size: 1.15rem;
+                    font-weight: 600;
+                    color: var(--text);
+                }
+
+                p {
+                    font-size: 0.9rem;
+                    color: var(--text-secondary);
+                    line-height: 1.55;
+                }
+            }
+        }
+    }
+
+    /* Final CTA Banner */
+    .landing-cta {
+        background-color: var(--bg-secondary);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 4.5rem 1.5rem;
+        text-align: center;
+
+        &__content {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+
+            h2 {
+                font-size: 2.15rem;
+                font-weight: 700;
+                letter-spacing: -0.025em;
+            }
+
+            p {
+                color: var(--text-secondary);
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+        }
+    }
+
+    /* Footer */
+    .landing-footer {
+        padding: 2.5rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1140px;
+        width: 100%;
+        margin: 0 auto;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+
+        a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: var(--text);
+            }
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 868px) {
+    .landing-page {
+        .landing-preview__body {
+            grid-template-columns: 1fr;
+        }
+
+        .landing-features .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .landing-footer {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+    }
+}
